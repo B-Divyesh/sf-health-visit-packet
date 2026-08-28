@@ -102,7 +102,7 @@ test('dialog close controls bypass required-field validation', async ({ page }) 
   await expect(page.locator('#restore-dialog')).toBeVisible();
   await page.getByRole('button', { name: 'Close packet restore' }).click();
   await expect(page.locator('#restore-dialog')).not.toBeVisible();
-  await page.getByRole('button', { name: 'Restore an existing license' }).click();
+  await page.getByRole('button', { name: 'Restore a license' }).click();
   await expect(page.locator('#license-dialog')).toBeVisible();
   await page.getByRole('button', { name: 'Close license restore' }).click();
   await expect(page.locator('#license-dialog')).not.toBeVisible();
@@ -161,12 +161,12 @@ test('keyboard skip link and modal close work without a pointer', async ({ page 
   await expect(page.locator('#bundle-dialog')).not.toBeVisible();
 });
 
-test('invalid returned license is stripped, rejected, and never exposes a dead checkout', async ({ page }) => {
+test('invalid returned license is stripped and rejected while checkout remains correctly targeted', async ({ page }) => {
   await page.route('https://api.sociobot.in/api/v1/products/health-visit-packet/verify?license=invalid-token', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ valid: false, reason: 'invalid' }) }));
   await page.goto('/?license=invalid-token');
   await expect.poll(() => page.url()).not.toContain('license=');
-  await expect(page.getByRole('heading', { name: 'Plus purchases are paused' })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Buy Plus/ })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Add a personal cover note' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Buy Plus — $9 once' })).toHaveAttribute('href', 'https://api.sociobot.in/api/v1/products/health-visit-packet/checkout');
   const stored = await page.evaluate(() => ({ token: localStorage.getItem('sb_license:health-visit-packet'), verdict: JSON.parse(localStorage.getItem('sb_license:health-visit-packet:verdict') || '{}') }));
   expect(stored.token).toBe('invalid-token');
   expect(stored.verdict.valid).toBe(false);
