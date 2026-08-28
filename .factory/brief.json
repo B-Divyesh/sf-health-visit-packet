@@ -1,0 +1,6 @@
+{
+  "slug": "health-visit-packet",
+  "title": "Health Visit Packet",
+  "artifact_class": "pwa-offline",
+  "smallest_useful_product": "Browser-only packet builder: paste/import selected values, attach source/date, add questions and a medication list, then generate a printable PDF and encrypted local bundle."
+}
