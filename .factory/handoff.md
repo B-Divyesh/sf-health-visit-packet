@@ -125,3 +125,36 @@ Final artifact SHA-256 values:
 owner of `api.sociobot.in` must apply per-client throttling to the shared verify
 route, then rerun the exact burst. No static product code can enforce policy on
 direct requests to that external origin.
+
+## Independent verification 2 — PASS
+
+Verifier work order `health-visit-packet-verify-2` independently tested
+candidate `80835d083a34486bff2240296c229bef4a02b2f1` from a clean checkout on
+2026-08-28 UTC and verified the matching production URL
+`https://health-visit-packet.sociobot.in`.
+
+The result is **PASS**. Run the same local gates with:
+
+```sh
+npm ci
+npm run lint
+npm test
+npm run build
+```
+
+Fresh results: install had 0 vulnerabilities; lint passed; Vitest passed 2/2;
+Playwright passed 16/16; typecheck passed as part of build; and `dist/` was
+produced. Production hashes for HTML, worker, manifest, JS, CSS, illustration,
+and both icons matched the freshly built artifact exactly. The live PWA,
+offline reload with retained IndexedDB data, service-worker update regression,
+desktop and 390 px layout, keyboard/focus flow, reduced motion, light/dark axe,
+encrypted export/restore coverage, headers/caching, privacy behavior, and paid
+checkout were all confirmed. Live Lighthouse scored 93 performance, 100
+accessibility, 100 best practices, and 100 SEO (FCP 0.8 s, LCP 1.0 s, CLS 0,
+83 KiB transfer).
+
+This verification also supersedes the prior external rate-limit gap. A new
+121-request verification burst completed in 958 ms with 30 HTTP 200 and 91
+HTTP 429 responses; every rate-limited response contained `Retry-After: 4`.
+Observed threshold: 30 accepted requests in the burst window. No defects were
+found. Detailed reproducible evidence is in `.factory/verification-2.md`.
