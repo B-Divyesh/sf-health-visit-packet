@@ -13,12 +13,27 @@ no accounts, analytics, remote fonts, or third-party scripts.
 ```sh
 npm install
 npm run dev
+npm run lint
 npm test
 npm run build
 ```
 
 `npm run build` creates the static deployment in `dist/`, with `index.html` at
 its root. Preview it locally with `npm run preview`.
+
+## Deploy
+
+Deployment is performed by the factory from a clean `main` checkout. After the
+verification commands above pass, deploy the existing static artifact class:
+
+```sh
+/opt/fleet/lib/deploy-static.sh health-visit-packet dist
+```
+
+The checked-in `public/staticwebapp.config.json` supplies production security,
+MIME, navigation fallback, and immutable hashed-asset caching policy. DNS,
+billing registration, and shared API infrastructure are managed outside this
+repository.
 
 ## Use
 

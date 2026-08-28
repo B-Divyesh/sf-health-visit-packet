@@ -16,8 +16,10 @@ color planes rather than generic cards or gradients.
 - Evergreen `#176B5B` is the primary action; its ink-on-light companion is
   `#DCEFE8`. Clay `#B94E36` marks cautions and removal; marigold `#D89A22`
   marks source notes. All body text is dark ink on pale paper (at least 4.5:1).
-- Dark treatment: `#172426` canvas, `#233638` surfaces, `#F7F2E7` ink, with
-  the same sage and clay roles.
+- Dark treatment: `#172426` canvas, `#233638` surfaces, `#F7F2E7` ink, and
+  lighter `#8FE1CC` sage for text/icons. Filled actions retain `#176B5B` with
+  white type. Separating text accent from action fill keeps every role at AA
+  contrast rather than mechanically reusing the light palette.
 - Typography: `Georgia, 'Times New Roman', serif` for human, readable packet
   titles; `system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`
   for compact editing controls. This needs no remote font or extra payload.
@@ -28,6 +30,9 @@ color planes rather than generic cards or gradients.
 
 The packet preview is a literal sheet. New entries appear as a layer settling
 onto it (180ms opacity/translate); save feedback is textual and immediate.
+Removal feedback appears as a low, anchored paper-slip notice with an eight
+second Undo action; service-worker updates use the same anchored grammar with
+an explicit refresh action.
 On reduced motion, every state change is instant. Keyboard focus is a clear
 evergreen outline. The phone layout keeps the packet preview above the editor
 and stacks all controls, rather than hiding the job.
