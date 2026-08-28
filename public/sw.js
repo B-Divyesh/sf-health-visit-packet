@@ -43,9 +43,13 @@ self.addEventListener("fetch", (event) => {
         return res;
       })
       .catch(() =>
-        event.request.mode === "navigate"
-          ? caches.match("/offline.html")
-          : caches.match(event.request).then((hit) => hit || Response.error()),
+        caches.match(event.request, { ignoreVary: true }).then(
+          (hit) =>
+            hit ||
+            (event.request.mode === "navigate"
+              ? caches.match("/offline.html")
+              : Response.error()),
+        ),
       ),
   );
 });

@@ -20,5 +20,6 @@ test('builds a source-labelled packet and survives an offline reload', async ({ 
   await expect(page.locator('#packet-sheet')).toContainText('Vitamin D');
   await context.setOffline(true);
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'You’re offline.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Bring one clear page to your next appointment.' })).toBeVisible();
+  await expect(page.locator('#packet-sheet')).toContainText('Vitamin D');
 });
