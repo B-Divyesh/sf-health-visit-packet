@@ -158,3 +158,43 @@ This verification also supersedes the prior external rate-limit gap. A new
 HTTP 429 responses; every rate-limited response contained `Retry-After: 4`.
 Observed threshold: 30 accepted requests in the burst window. No defects were
 found. Detailed reproducible evidence is in `.factory/verification-2.md`.
+
+## Strict review 1 — FAIL
+
+Review work order `health-visit-packet-review-1` tested production again on
+2026-09-05 UTC. The reviewed implementation remains
+`80835d083a34486bff2240296c229bef4a02b2f1`; documentation HEAD before this
+review was `e4799807c21a22e2999c05b674f4ab7b7f07f126`. Live HTML, worker,
+manifest, JS, and CSS hashes matched the implementation candidate.
+
+The strict result is **FAIL: 6 findings and 18 untested public claims**. No
+product code was changed. The blocking gaps are:
+
+- No one-click sample demo or isolated demo namespace. `/demo` is the normal
+  empty app, writes to `health-visit-packet`, exposes those entries on `/`, and
+  has no sample label, reset, or start-real actions. `.factory/demo.md` is
+  absent.
+- No `.factory/claims.json` and no `@claim:*` tests. Eighteen public claims were
+  inventoried as untested under the claims contract.
+- At 390 px with text resized to 200%, the document expands to 526 px while
+  horizontal overflow is clipped.
+- The first screen does not name patients, explain the primary action's result,
+  or present three short privacy/offline/price facts. `.factory/copy-audit.md`
+  is absent.
+- Required site structure is incomplete: no designed 404, sitemap, canonical,
+  social metadata/image, Apple touch declaration, Demo title/link, shared legal
+  shell, footer attribution/version, or three-step How it works section.
+- README says all state is in IndexedDB although license state uses
+  localStorage.
+
+Core product behavior and all earlier repair findings continue to pass. A fresh
+`npm ci`, lint, 18 tests, typecheck, and build passed. Live normal/boundary/error
+and recovery paths passed; root-route offline reload retained data; Undo passed
+for every entry kind; keyboard, reduced motion, normal-size mobile targets, and
+light/dark axe passed. Checkout returned 303. Rate limiting returned 30×200 and
+91×429, with `Retry-After: 4` on every 429. Fresh Lighthouse scores were
+100/100/100/100 with 1.0 s LCP, 20 ms TBT, CLS 0, and 83 KiB transfer.
+
+See `.factory/review-1.md` for the complete evidence, claim inventory, exact
+prior-finding dispositions, and required remediation. Evidence screenshots and
+the Lighthouse JSON are under `/work/.evidence/`.
