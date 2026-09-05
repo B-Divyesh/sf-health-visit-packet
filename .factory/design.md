@@ -54,3 +54,15 @@ logos, no people, no realistic medical imagery, no gradients.*
 
 Asset provenance: factory-image Azure AI Foundry generation, 2026-08-28; this
 prompt and its generated output are original to Health Visit Packet.
+
+The 1200×630 Open Graph image is a hand-composed center crop of that same
+original source image. The 180px Apple touch icon is resized from the original
+product icon. No new stock art, brand mark, or third-party asset was added in
+the September 5, 2026 repair. Both derived assets were visually checked for
+seams, text artifacts, unintended symbols, and crop loss.
+
+Demo mode keeps the same paper-sheet grammar but replaces the decorative hero
+with a filled sample summary. A dark evergreen strip stays at the top while the
+sample is active, so the storage boundary remains visible without competing
+with the packet. Reset and exit actions use the same button shapes as the
+editor. At 200% text size, all grids collapse before any content can clip.

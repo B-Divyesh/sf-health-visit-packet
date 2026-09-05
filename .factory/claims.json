@@ -1,0 +1,135 @@
+[
+  {
+    "id": "demo-isolation",
+    "claim": "Sample changes never touch your real packet, and Start for real clears the demo.",
+    "where": "landing first screen, demo banner, README",
+    "test": "npm run test:claims -- --grep @claim:demo-isolation",
+    "sandbox": "fresh browser context; create real data, enter /demo, change sample data, start for real, compare both IndexedDB namespaces"
+  },
+  {
+    "id": "local-packet",
+    "claim": "Packet details stay in this browser unless the user exports them.",
+    "where": "landing facts, privacy, README",
+    "test": "npm run test:claims -- --grep @claim:local-packet",
+    "sandbox": "fresh /demo; add a unique health value and assert it remains local with no cross-origin request"
+  },
+  {
+    "id": "indexeddb-storage",
+    "claim": "Packet data is stored in IndexedDB, separate from license settings.",
+    "where": "privacy, README",
+    "test": "npm run test:claims -- --grep @claim:indexeddb-storage",
+    "sandbox": "fresh /demo; inspect browser databases and storage after editing the sample"
+  },
+  {
+    "id": "no-tracking",
+    "claim": "The site needs no account and loads no analytics, trackers, remote fonts, or third-party scripts.",
+    "where": "privacy, README",
+    "test": "npm run test:claims -- --grep @claim:no-tracking",
+    "sandbox": "fresh /demo; record all page requests and inspect the rendered document"
+  },
+  {
+    "id": "offline-reload",
+    "claim": "The packet works offline after the first visit.",
+    "where": "landing facts, README",
+    "test": "npm run test:claims -- --grep @claim:offline-reload",
+    "sandbox": "own fresh browser context; load /demo, wait for service-worker control, go offline, reload and inspect sample data"
+  },
+  {
+    "id": "source-date",
+    "claim": "Selected values keep their source and date.",
+    "where": "landing workflow, packet preview, README",
+    "test": "npm run test:claims -- --grep @claim:source-date",
+    "sandbox": "fresh /demo; add a dated, source-labelled result and inspect the printable preview"
+  },
+  {
+    "id": "reload-persistence",
+    "claim": "Packet changes survive a reload.",
+    "where": "save status and README storage description",
+    "test": "npm run test:claims -- --grep @claim:reload-persistence",
+    "sandbox": "fresh /demo; change the visit reason, wait for save, reload and compare the preview"
+  },
+  {
+    "id": "print-pdf",
+    "claim": "The visible packet can be printed or saved as PDF after a data-minimization warning.",
+    "where": "export panel, README",
+    "test": "npm run test:claims -- --grep @claim:print-pdf",
+    "sandbox": "fresh /demo; read the visible warning and assert the print action invokes browser print"
+  },
+  {
+    "id": "json-export",
+    "claim": "The packet exports as plain JSON.",
+    "where": "export panel, README",
+    "test": "npm run test:claims -- --grep @claim:json-export",
+    "sandbox": "fresh /demo; approve and parse the downloaded JSON, including every sample list"
+  },
+  {
+    "id": "encrypted-hides-data",
+    "claim": "An encrypted bundle does not expose entered health text.",
+    "where": "export panel, privacy, README",
+    "test": "npm run test:claims -- --grep @claim:encrypted-hides-data",
+    "sandbox": "fresh /demo; add a unique value, download an encrypted bundle, and inspect the file"
+  },
+  {
+    "id": "encrypted-restore",
+    "claim": "An encrypted bundle can restore the packet later.",
+    "where": "export panel, privacy, README",
+    "test": "npm run test:claims -- --grep @claim:encrypted-restore",
+    "sandbox": "fresh /demo; export, remove a sample entry, import the file, and restore with the passphrase"
+  },
+  {
+    "id": "passphrase-private",
+    "claim": "The passphrase is not sent and cannot be recovered by the product.",
+    "where": "encrypted bundle dialog, privacy",
+    "test": "npm run test:claims -- --grep @claim:passphrase-private",
+    "sandbox": "fresh /demo; record requests during encryption and prove a wrong passphrase cannot open the bundle"
+  },
+  {
+    "id": "reversible-removals",
+    "claim": "Removed results, medicines, and questions can be restored with Undo.",
+    "where": "in-product removal notice",
+    "test": "npm run test:claims -- --grep @claim:reversible-removals",
+    "sandbox": "fresh /demo sample; remove and undo one entry of each kind, then inspect the preview"
+  },
+  {
+    "id": "plus-price",
+    "claim": "Plus costs $9 as a one-time purchase and opens hosted checkout.",
+    "where": "landing facts, Plus section, terms, README",
+    "test": "npm run test:claims -- --grep @claim:plus-price",
+    "sandbox": "fresh /demo; inspect the offer and confirm the registered checkout returns a hosted redirect"
+  },
+  {
+    "id": "plus-cover-note",
+    "claim": "Plus adds a personal cover note to the printable packet.",
+    "where": "Plus section, terms, README",
+    "test": "npm run test:claims -- --grep @claim:plus-cover-note",
+    "sandbox": "fresh browser state with a fixture cached entitlement; enter a cover note and inspect the printable preview"
+  },
+  {
+    "id": "free-core",
+    "claim": "The builder, accessibility features, safety steps, backups, and exports stay free.",
+    "where": "Plus section, terms, README",
+    "test": "npm run test:claims -- --grep @claim:free-core",
+    "sandbox": "fresh /demo without license state; build and export a packet, open backup, and run axe"
+  },
+  {
+    "id": "license-handling",
+    "claim": "A returned license leaves the URL, verification sends only the token, and its result is cached for one day.",
+    "where": "privacy",
+    "test": "npm run test:claims -- --grep @claim:license-handling",
+    "sandbox": "fresh real workspace with recorded verification response; inspect URL, request, local cache, and reload count"
+  },
+  {
+    "id": "no-health-server",
+    "claim": "The site sends no packet entries to a server.",
+    "where": "privacy",
+    "test": "npm run test:claims -- --grep @claim:no-health-server",
+    "sandbox": "fresh /demo; add a unique marker while recording every request method, URL, and body"
+  },
+  {
+    "id": "no-portal-advice",
+    "claim": "The product does not retrieve portal records or provide medical advice.",
+    "where": "landing limits, terms, README",
+    "test": "npm run test:claims -- --grep @claim:no-portal-advice",
+    "sandbox": "fresh /demo; enter a portal-labelled value, assert literal rendering, and assert no portal or model request"
+  }
+]

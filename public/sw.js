@@ -1,12 +1,14 @@
-const VERSION = "v2";
+const VERSION = "v5";
 const SHELL_CACHE = `health-visit-packet-shell-${VERSION}`;
 const ASSET_CACHE = `health-visit-packet-assets-${VERSION}`;
 const CACHE_PREFIX = "health-visit-packet-";
 const SHELL = [
   "/",
+  "/demo",
   "/index.html",
   "/manifest.webmanifest",
   "/icon.svg",
+  "/legal.css",
   "/offline.html",
 ];
 async function precacheAppShell() {
@@ -36,8 +38,8 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== location.origin) return;
   if (url.pathname.startsWith("/assets/") || /\.(?:png|webp|svg)$/.test(url.pathname)) {
-    event.respondWith(caches.open(ASSET_CACHE).then((cache) => cache.match(event.request).then((hit) => hit || fetch(event.request).then((response) => { if (response.ok) cache.put(event.request, response.clone()); return response; }))));
+    event.respondWith(caches.open(ASSET_CACHE).then((cache) => cache.match(event.request, { ignoreVary: true }).then((hit) => hit || fetch(event.request).then((response) => { if (response.ok) cache.put(event.request, response.clone()); return response; }))));
     return;
   }
-  event.respondWith(fetch(event.request).then((response) => { if (response.ok) caches.open(SHELL_CACHE).then((cache) => cache.put(event.request, response.clone())); return response; }).catch(() => caches.match(event.request, { ignoreVary: true }).then((hit) => hit || (event.request.mode === "navigate" ? caches.match("/offline.html") : Response.error()))));
+  event.respondWith(fetch(event.request).then((response) => { if (response.ok) caches.open(SHELL_CACHE).then((cache) => cache.put(event.request, response.clone())); return response; }).catch(() => caches.match(event.request, { ignoreVary: true }).then(async (hit) => hit || (event.request.mode === "navigate" ? (await caches.match("/index.html")) || caches.match("/offline.html") : Response.error()))));
 });

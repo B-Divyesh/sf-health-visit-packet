@@ -1,47 +1,66 @@
 # Health Visit Packet
 
-Health Visit Packet is a private, browser-only workspace for patients preparing
-for an appointment. Add selected results with source/date, medicines, and
-questions, then print a compact handoff or download an encrypted backup. It is
-not medical advice and it does not retrieve records from portals.
+Build a compact packet for one health visit. It is for patients preparing from
+results, medicine labels, portal notes, and questions kept in several places.
 
-Everything is stored in IndexedDB on the current device by default. There are
-no accounts, analytics, remote fonts, or third-party scripts.
+The free builder keeps sources and dates beside selected values. It prints the
+visible packet, exports plain JSON, and creates an encrypted backup that can be
+restored later. It does not retrieve portal records or provide medical advice.
+
+Try the isolated sample at
+[`/demo`](https://health-visit-packet.sociobot.in/demo). It contains a realistic
+visit, two results, two medicines, and two questions. Demo changes use the
+separate `demo:health-visit-packet` IndexedDB database. **Reset demo** restores
+the sample. **Start for real** deletes that demo database before opening the
+real workspace.
+
+## Storage and privacy
+
+Packet data uses the `health-visit-packet` IndexedDB database on the current
+device. A Plus license token and its cached result use namespaced localStorage.
+The site needs no account and loads no analytics, trackers, remote fonts, or
+third-party scripts. Packet use works offline after the first visit.
+
+See [Privacy](/privacy/) and [Terms](/terms/).
 
 ## Run and verify
 
+Use Node 22 and npm 10 from a clean checkout:
+
 ```sh
-npm install
-npm run dev
+npm ci
 npm run lint
 npm test
 npm run build
 ```
 
-`npm run build` creates the static deployment in `dist/`, with `index.html` at
-its root. Preview it locally with `npm run preview`.
+`npm test` runs unit and Playwright browser checks. Every public product claim
+is listed in `.factory/claims.json`; run them together with:
+
+```sh
+npm run test:claims
+```
+
+`npm run build` creates `dist/` with `index.html` at its root. Preview the
+production artifact with `npm run preview`.
 
 ## Deploy
 
-Deployment is performed by the factory from a clean `main` checkout. After the
-verification commands above pass, deploy the existing static artifact class:
+The factory deploys a clean `main` checkout with:
 
 ```sh
 /opt/fleet/lib/deploy-static.sh health-visit-packet dist
 ```
 
-The checked-in `public/staticwebapp.config.json` supplies production security,
-MIME, navigation fallback, and immutable hashed-asset caching policy. DNS,
-billing registration, and shared API infrastructure are managed outside this
-repository.
+`public/staticwebapp.config.json` defines the `/demo` rewrite, designed 404,
+security headers, MIME types, and cache policy. DNS, billing registration, and
+the shared billing API are managed outside this repository.
 
-## Use
+## Plus
 
-Enter visit details, add source-labelled observations, medicines, and questions.
-Use **Print or save as PDF** after reviewing the packet. **Download encrypted
-bundle** encrypts a portable copy using a passphrase you choose; the passphrase
-is never sent anywhere. Plain JSON is available for data ownership and should
-only be used where you can keep the file private.
+Plus costs $9 once and adds a personal cover note to the printable packet. The
+builder, accessibility features, safety steps, backups, and exports stay free.
+Checkout and license verification use the Sociobot billing API.
 
-See [Privacy](/privacy/) and [Terms](/terms/). The design rationale and original
-illustration provenance are recorded in `.factory/design.md`.
+The visual rationale and original image provenance are in
+`.factory/design.md`. This project is licensed under the MIT License.

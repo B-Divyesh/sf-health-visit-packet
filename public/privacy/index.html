@@ -1,1 +1,49 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#176b5b"><title>Privacy — Health Visit Packet</title><style>:root{color-scheme:light dark}*{box-sizing:border-box}body{margin:0;background:#f6f0e6;color:#24343a;font:17px/1.55 system-ui;padding:8vw}main{max-width:720px}h1{font:clamp(2.5rem,8vw,3rem) Georgia,serif}a{color:#176b5b;font-weight:bold;display:inline-flex;min-height:44px;align-items:center}:focus-visible{outline:3px solid #9b6909;outline-offset:3px}@media(prefers-color-scheme:dark){body{background:#172426;color:#f7f2e7}a{color:#8fe1cc}:focus-visible{outline-color:#f2bd54}}</style></head><body><main><a href="/">← Back to Health Visit Packet</a><h1>Privacy</h1><p>Health Visit Packet is designed so your health information stays on your device. Your packet is stored in this browser’s IndexedDB storage. We do not require an account, receive your packet, run analytics, or load third-party scripts or fonts.</p><p>When you choose to download a plain JSON file, print/save a PDF, or download an encrypted bundle, the file is created in your browser and saved where your browser normally saves downloads. An encrypted bundle is protected with a passphrase you choose; we cannot recover it.</p><p>If you restore an existing Plus purchase, its license token and last verification result are stored in this browser’s local storage. The token—not your packet or health entries—is sent to Sociobot’s license API at most once per day while online. A license returned in the URL is saved and immediately removed from the visible URL.</p><p>Clearing browser site data, using private browsing, or changing browsers can remove the local packet and saved license. Export a backup if you need to keep the packet. This site has no server-side health-data retention.</p><p>Last updated: August 28, 2026.</p></main></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#176b5b">
+    <meta name="description" content="How Health Visit Packet stores packet and license details in your browser.">
+    <link rel="canonical" href="https://health-visit-packet.sociobot.in/privacy/">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/legal.css">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Privacy — Health Visit Packet">
+    <meta property="og:description" content="How packet and license details are stored and used.">
+    <meta property="og:url" content="https://health-visit-packet.sociobot.in/privacy/">
+    <meta property="og:image" content="https://health-visit-packet.sociobot.in/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Privacy — Health Visit Packet">
+    <meta name="twitter:description" content="How packet and license details are stored and used.">
+    <meta name="twitter:image" content="https://health-visit-packet.sociobot.in/og-image.jpg">
+    <title>Privacy — Health Visit Packet</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to privacy notice</a>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Health Visit Packet home"><span class="mark" aria-hidden="true"></span>Health Visit Packet</a>
+      <nav aria-label="Main navigation"><a href="/demo">Demo</a><a href="/privacy/" aria-current="page">Privacy</a><a href="/terms/">Terms</a></nav>
+    </header>
+    <main id="main" tabindex="-1">
+      <p class="eyebrow">Product policy</p>
+      <h1>Privacy</h1>
+      <h2>Your packet</h2>
+      <p>Your packet is stored in this browser’s IndexedDB database. The site sends no packet entries to a server.</p>
+      <p>You do not need an account. The site has no analytics, trackers, remote fonts, or third-party scripts.</p>
+      <h2>Your exports</h2>
+      <p>Printouts, plain JSON files, and encrypted bundles are created in your browser. They are saved where your browser normally stores downloads.</p>
+      <p>Your passphrase is not sent anywhere. We cannot recover a forgotten passphrase.</p>
+      <h2>Your Plus license</h2>
+      <p>A restored Plus token and its latest result use this browser’s local storage. They are separate from your packet database.</p>
+      <p>Only the token is sent to Sociobot’s license API. The app checks at most once per day while online.</p>
+      <p>A returned license is removed from the visible URL after it is saved.</p>
+      <h2>Removing local data</h2>
+      <p>Clearing site data, private browsing, or changing browsers can remove the packet and license. Download a backup if you need one.</p>
+      <p>Last updated: September 5, 2026.</p>
+      <a class="back" href="/">Return to the packet builder</a>
+    </main>
+    <footer><span>Build a private packet for one health visit.</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · Built by Param Factory · Version 1.1.0</span></footer>
+  </body>
+</html>

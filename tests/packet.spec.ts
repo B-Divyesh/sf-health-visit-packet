@@ -26,7 +26,7 @@ test('builds a source-labelled packet and survives an offline reload', async ({ 
   await page.waitForTimeout(300);
   await context.setOffline(true);
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Bring one clear page to your next appointment.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Bring one clear page to your appointment' })).toBeVisible();
   await expect(page.locator('#packet-sheet')).toContainText('Vitamin D');
   await expect(page.locator('#offline')).toBeVisible();
 });
@@ -68,12 +68,12 @@ test('encrypted export hides health text and restores with the correct passphras
   await addResult(page, 'Private observation');
   await page.getByRole('button', { name: 'Download encrypted bundle' }).click();
   await page.locator('#bundle-form input[name="passphrase"]').fill('short');
-  await page.getByRole('button', { name: 'Encrypt & download' }).click();
+  await page.getByRole('button', { name: 'Encrypt and download' }).click();
   await expect(page.locator('#bundle-dialog')).toBeVisible();
   expect(await page.locator('#bundle-form input[name="passphrase"]').evaluate((input: HTMLInputElement) => input.validity.tooShort)).toBe(true);
   await page.locator('#bundle-form input[name="passphrase"]').fill('correct horse battery');
   const downloadPromise = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Encrypt & download' }).click();
+  await page.getByRole('button', { name: 'Encrypt and download' }).click();
   const download = await downloadPromise;
   const downloadPath = await download.path();
   expect(downloadPath).not.toBeNull();
@@ -129,6 +129,43 @@ test('390px layout has no overflow and visible touch targets are at least 44px',
   const previewTop = await page.locator('.preview-area').evaluate(element => element.getBoundingClientRect().top);
   const editorTop = await page.locator('.editor').evaluate(element => element.getBoundingClientRect().top);
   expect(previewTop).toBeLessThan(editorTop);
+});
+
+test('390px layout keeps all text visible when text is resized to 200%', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.locator('html').evaluate(element => { element.style.fontSize = '32px'; });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  const clipped = await page.locator('h1, .lede, .hero-actions, .hero-facts, figcaption, #save-state').evaluateAll(elements => elements.flatMap(element => {
+    const rectangles = [...element.getClientRects()];
+    return rectangles.filter(rectangle => rectangle.left < -0.5 || rectangle.right > innerWidth + 0.5).map(rectangle => ({ text: element.textContent?.trim(), left: rectangle.left, right: rectangle.right }));
+  }));
+  expect(clipped).toEqual([]);
+});
+
+test('demo route is populated, labelled, resettable, and titled for the route', async ({ page }) => {
+  await page.goto('/demo');
+  await expect(page).toHaveTitle('Demo — Health Visit Packet');
+  await expect(page.getByText('Demo — sample data, nothing is saved')).toBeVisible();
+  await expect(page.locator('#packet-sheet')).toContainText('Maya Patel');
+  await expect(page.locator('#packet-sheet')).toContainText('Northside Lab portal · 2026-08-28');
+  await page.locator('#profile-form input[name="name"]').fill('Changed sample');
+  await page.getByRole('button', { name: 'Reset demo' }).click();
+  await expect(page.locator('#packet-sheet')).toContainText('Maya Patel');
+  await expect(page.locator('#packet-sheet')).not.toContainText('Changed sample');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://health-visit-packet.sociobot.in/demo');
+});
+
+test('legal and not-found pages use the shared accessible shell', async ({ page }) => {
+  for (const route of ['/privacy/', '/terms/', '/404.html']) {
+    await page.goto(route);
+    await expect(page.locator('header nav')).toBeVisible();
+    await expect(page.locator('main')).toBeVisible();
+    await expect(page.locator('footer')).toContainText('Built by Param Factory');
+    await expect(page.locator('h1')).toHaveCount(1);
+    await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveCount(1);
+  }
+  await expect(page.getByRole('heading', { name: 'This page does not exist' })).toBeVisible();
 });
 
 for (const colorScheme of ['light', 'dark'] as const) {
@@ -214,6 +251,24 @@ test('release configuration hardens responses, MIME, and immutable assets', asyn
   expect(config.mimeTypes['.webmanifest']).toBe('application/manifest+json');
   expect(config.routes.find((route: { route: string }) => route.route === '/assets/*').headers['Cache-Control']).toContain('immutable');
   expect(config.routes.find((route: { route: string }) => route.route === '/sw.js').headers['Cache-Control']).toContain('no-store');
+  expect(config.routes.find((route: { route: string }) => route.route === '/demo').rewrite).toBe('/index.html');
+  expect(config.responseOverrides['404'].rewrite).toBe('/404.html');
+});
+
+test('metadata, sitemap, and claim registry cover the public routes and tagged checks', async () => {
+  const index = await readFile(path.resolve('index.html'), 'utf8');
+  const sitemap = await readFile(path.resolve('public/sitemap.xml'), 'utf8');
+  const claims = JSON.parse(await readFile(path.resolve('.factory/claims.json'), 'utf8')) as Array<{ id: string; test: string }>;
+  const claimTests = await readFile(path.resolve('tests/claims.spec.ts'), 'utf8');
+  expect(index).toContain('rel="canonical"');
+  expect(index).toContain('property="og:image"');
+  expect(index).toContain('name="twitter:card"');
+  for (const route of ['/', '/demo', '/privacy/', '/terms/']) expect(sitemap).toContain(`health-visit-packet.sociobot.in${route}`);
+  expect(new Set(claims.map(claim => claim.id)).size).toBe(claims.length);
+  for (const claim of claims) {
+    expect(claim.test).toContain(`@claim:${claim.id}`);
+    expect(claimTests.match(new RegExp(`@claim:${claim.id}(?:\\s|\\b)`, 'g'))).toHaveLength(1);
+  }
 });
 
 test('terms identify the merchant of record and refund revocation', async ({ page }) => {
