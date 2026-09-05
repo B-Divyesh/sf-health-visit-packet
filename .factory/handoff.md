@@ -1,200 +1,187 @@
-# Health Visit Packet repair handoff
+# Health Visit Packet repair 2 handoff
 
-## Scope and result
+## Result
 
-Repair work order `health-visit-packet-repair-1` was performed against verifier
-report commit `7305678972b99360898774eeb9b7b6c9e702b4fb` for candidate
-`7574c673afb0361f99914d308d9690440e6e7f0d`.
+Repair work order `health-visit-packet-repair-2` is complete. The strict review’s
+six findings are fixed, the 18 previously untested public claims now have
+outcome checks, and the new demo-isolation promise has its own nineteenth claim
+check.
 
-All repository-owned product, accessibility, PWA, legal, caching, and response
-policy findings are repaired with regression coverage. The production checkout
-that returned 404 during independent verification now returns HTTP 303 to a
-hosted Dodo checkout, and the tested buy link is enabled again.
+- Live URL: `https://health-visit-packet.sociobot.in`
+- Implementation SHA deployed: `72def0701846a146d722ecb0e7f3d948ca5b4bb6`
+- Documentation SHA: the report-only commit containing this handoff; it follows
+  the implementation SHA and does not change the deployed artifact.
+- Successful Azure Static Web Apps deployment ID:
+  `c0449213-0bea-49b4-a1af-ee5a68249c03`
+- Deployed artifact class: static PWA; no backend or shared database is used.
 
-One factory-service issue remains outside this repository: the shared Sociobot
-license verification endpoint still did not rate-limit a direct 121-request
-burst. The app itself enforces at-most-daily verification, but the shared API
-must add server-side 429 + `Retry-After` enforcement. Repository instructions
-explicitly prohibit changing shared billing/infra from this product repo.
+## What changed
 
-## Repairs
+### Isolated one-click demo
 
-- Reworked dark semantic colors, including Plus, cover note, and error states;
-  axe reports zero WCAG A/AA violations in light and dark modes.
-- Added an eight-second visible Undo flow for results, medicines, and questions;
-  restored entries are persisted to IndexedDB.
-- Changed all dialog close controls to non-submitting buttons and added dialog
-  accessible names. Pointer, Enter, and Escape paths work without validation
-  trapping the user.
-- Replaced the clipped import-only announcement with a visible live notice and
-  specific recovery copy; encrypted-bundle shape is validated before prompting.
-- Removed 390 px overflow, stacked narrow two-column fields, and brought every
-  visible link/control measured by the regression test to at least 44 by 44 px.
-- Replaced the fixed network-first worker with versioned shell/asset caches,
-  cache-first hashed/static assets, network-first navigation, old-cache cleanup,
-  first-install activation, and a waiting-worker update notice with refresh.
-  A duplicate cache-write race found during offline testing was also removed.
-- Added Sociobot/Dodo merchant-of-record, one-time price, refund, and automatic
-  license-revocation terms. Privacy now documents local token/verdict storage and
-  the license-only verification request.
-- Added checked-in Azure Static Web Apps policy for CSP, Permissions Policy,
-  frame denial, manifest MIME, no-store service worker, and immutable hashed
-  assets. Added a valid `robots.txt` and documented deployment.
-- Added ESLint and pinned Playwright 1.58.2. Added exact Playwright/axe
-  regressions for the independent verifier's failures and retained encrypted
-  backup, invalid-license, offline-data, keyboard, and responsive coverage.
+- Added **Try it with sample data** to the first screen and a direct `/demo`
+  entry point with title `Demo — Health Visit Packet`.
+- Added a realistic Maya Patel packet with a visit reason, two sourced and
+  dated results, two medicines, and two clinician questions.
+- Demo data uses IndexedDB database `demo:health-visit-packet`. Real data remains
+  in `health-visit-packet`. Demo mode does not read license localStorage.
+- Added the persistent **Demo — sample data, nothing is saved** banner with
+  **Reset demo** and **Start for real**. Starting for real deletes the demo
+  database before reopening the untouched real packet.
+- Added `/demo` to the service-worker shell. A cache `Vary` mismatch found by
+  repeated offline runs was fixed with an `ignoreVary` cache lookup. Six
+  consecutive isolated offline repeats passed after the repair.
+- Documented the sample, namespace, reset, exit, and offline behavior in
+  `.factory/demo.md`.
 
-The researched brief, local-first IndexedDB model, print/plain/encrypted export,
-license return/restore flow, original paper-cut identity, illustration, static
-deployment class, and all behavior that previously passed were preserved.
+### Claims and plain words
 
-## Clean verification
+- Added `.factory/claims.json` with 19 one-to-one `@claim:<id>` browser tests.
+  These cover the strict review’s 18 claims plus demo isolation.
+- Tests exercise storage separation, browser requests, offline reload, source
+  retention, persistence, print, JSON, encryption, restore, passphrase privacy,
+  Undo, price/checkout, Plus output, free features, license handling, and
+  product limits. They assert outcomes rather than source strings.
+- Replaced the first-screen copy with a job headline, named patient audience,
+  sample action and result, real-data action, and three privacy/offline/price
+  facts.
+- Added `.factory/copy-audit.md`. No sentence exceeds 22 words, the average is
+  below 14 words, and no banned marketing term appears.
+- Added the verb-first, 84-character catalog description and copied it to
+  `/work/.evidence/catalog-description.txt`.
 
-Environment: Node 22.23.2, npm 10.9.8, Playwright 1.58.2, axe-core 4.10.3,
-Lighthouse 12.8.2.
+### Text resize, structure, and metadata
+
+- Removed clipped body overflow, made grids and headers shrink safely, and
+  added narrow-layout rules for long text. At a 390 px viewport with root text
+  resized from 16 px to 32 px, the live document remains 390 px wide and the
+  audited first-screen text has no clipped rectangle.
+- Added a three-step **How it works** section and the standard landing-page
+  order. Header navigation now includes Demo; the footer includes Privacy,
+  Terms, Param Factory attribution, and version 1.1.0.
+- Rebuilt Privacy and Terms with the shared header, navigation, skip link,
+  footer, focus treatment, responsive layout, and route metadata.
+- Added a designed `404.html` and an Azure 404 response override. An unknown
+  production URL returns HTTP 404 while showing the product-styled recovery
+  page.
+- Added `sitemap.xml`, its `robots.txt` reference, canonical links, route
+  descriptions, Open Graph/Twitter fields, an Apple touch icon, and a 1200×630
+  social image derived from the existing original illustration.
+- Removed inline styles so the live CSP no longer needs `style-src
+  'unsafe-inline'`.
+
+### Documentation and paid offer
+
+- README now distinguishes packet IndexedDB storage from license localStorage,
+  documents `/demo`, clean verification, deployment, and the free/Plus split.
+- The $9 one-time Plus cover-note deliverable remains intact. Public billing
+  metadata is at `/work/.evidence/billing-offer.json`.
+- No AI feature was added. Record retrieval, interpretation, and diagnosis are
+  explicit non-goals; an inference request would weaken the local-first job
+  rather than complete it.
+
+## Current and earlier finding disposition
+
+| Finding | Disposition |
+| --- | --- |
+| Missing isolated demo | Fixed; separate database, sample, persistent label, reset, clear-on-exit, and offline route are tested live. |
+| Missing claims registry/tests | Fixed; 19 registered claims each have exactly one tagged outcome test. |
+| 200% mobile text clipping | Fixed; live 390 px document width is 390 px with no clipped audited text. |
+| First screen missed audience/action result/facts | Fixed; all appear before scrolling on the tested phone and desktop. |
+| Missing 404/sitemap/metadata/shared shell/how-to section | Fixed and checked on the HTTPS origin. |
+| README overstated IndexedDB use | Fixed; packet and license storage are described separately. |
+| Checkout returned 404 | Remains fixed; live checkout returns 303 to hosted Dodo checkout. |
+| Verification rate limiting | Remains fixed; 30 requests returned 200 and 91 returned 429 with `Retry-After: 4`. |
+| Dark-mode contrast | Remains fixed; live light and dark axe scans report zero violations. |
+| Irreversible removals | Remains fixed; result, medicine, and question Undo paths pass. |
+| Dialog close validation trap | Remains fixed; pointer, Enter, and Escape paths pass. |
+| Hidden malformed-import error | Remains fixed; visible recovery instructions pass. |
+| Normal 390 px overflow/small targets | Remains fixed; width is 390 px and visible controls are at least 44×44 px. |
+| PWA update/cache weaknesses | Remains fixed; waiting update, refresh, version cleanup, and offline sample reload pass. |
+| Paid legal copy | Remains fixed; price, merchant of record, refund, and revocation are stated. |
+| Headers/cache/MIME/deployment docs | Remain fixed and verified live. |
+
+## Verification
+
+Environment: Node 22.23.2, npm 10.9.8, Playwright 1.58.2, axe-core
+4.10.3, Lighthouse 12.8.2.
+
+An independent clean clone at the exact implementation SHA was used:
 
 ```sh
 npm ci
+for claim_id in $(jq -r '.[].id' .factory/claims.json); do
+  npm run test:claims -- --grep "@claim:${claim_id}" || exit 1
+done
 npm run lint
 npm test
 npm run build
 ```
 
-Results on 2026-08-28 UTC:
+Results:
 
-- `npm ci`: 138 packages; 0 vulnerabilities.
+- `npm ci`: 138 packages installed; 0 vulnerabilities.
+- All 19 declared claim commands passed individually from the clean clone.
 - `npm run lint`: pass.
-- Vitest: 2/2 pass.
-- Playwright: 16/16 pass, including desktop, 390x844, keyboard, light/dark axe,
-  legal routes, all three Undo paths, dialog close, visible malformed import,
-  encrypted export/wrong-passphrase/restore, invalid/cached license handling,
-  offline reload with IndexedDB data, waiting update/refresh, old-cache cleanup,
-  and release configuration.
-- TypeScript: pass (`tsc --noEmit`).
-- Production build: pass; `dist/index.html` at root.
-- Bundles: JS 18,852 B (6.69 KB gzip), CSS 11,486 B (3.53 KB gzip), hero
-  WebP 19,518 B. These are below the 200 KB / 50 KB / 300 KB budgets.
-- Factory `verify-url.sh`: HTTP 200, one h1, `lang=en`, main landmark, zero
-  missing image alts, zero unlabeled buttons, zero console/page errors.
-- Local Lighthouse: performance 100, accessibility 100, best practices 100,
-  SEO 100; FCP 0.9 s, LCP 1.5 s, TBT 0 ms, CLS 0.
-- Live Lighthouse: performance 100, accessibility 100, best practices 100,
-  SEO 100; FCP 0.8 s, LCP 1.2 s, TBT 30 ms, CLS 0, transfer 83 KiB.
+- `npm test`: 2/2 Vitest and 39/39 Playwright checks passed.
+- `npm run build`: typecheck passed and `dist/index.html` was produced.
+- Initial JS: 23,864 B / 8.26 KB gzip. CSS: 14,608 B / 4.16 KB
+  gzip. Hero WebP: 19,518 B. All are below the product budgets.
+- Local Lighthouse: 100 performance, 100 accessibility, 100 best practices,
+  100 SEO; FCP 0.9 s, LCP 1.3 s, TBT 0 ms, CLS 0, 33 KiB transfer.
+- Live Lighthouse: 100 performance, 100 accessibility, 100 best practices,
+  100 SEO; FCP 0.8 s, LCP 1.0 s, TBT 20 ms, CLS 0, 33 KiB transfer.
+- Factory live verifier: HTTPS 200, one `h1`, `lang=en`, main landmark, zero
+  missing image alts, zero unlabeled buttons, and zero console/page errors.
 
-## Production verification
+## Live cold checks
 
-Deployment command:
+- Fresh 1440×900 and 390×844 contexts showed the job, patient audience, and
+  **Try it with sample data** before scrolling. The phone action measured
+  350×48 px. Screenshots are under `/work/.evidence/live-desktop.png`,
+  `/work/.evidence/live-phone.png`, and `/work/.evidence/live-demoPhone.png`.
+- A fresh phone demo showed the sample banner and sourced records. Reset
+  restored Maya Patel. Starting for real removed the demo database and restored
+  an unchanged real-data marker.
+- A fresh demo context retained an edited reason after an offline reload and
+  showed the offline status.
+- Live light and dark axe scans returned zero violations. Keyboard Tab exposed
+  the skip link, Enter focused `main`, reduced motion reported 0 s animation
+  and transition durations, and all visible phone targets were at least 44 px.
+- Privacy and Terms return 200 with distinct titles and the shared shell.
+  `/does-not-exist-repair-2` returns 404 with the designed page, one `h1`, and
+  zero axe violations. `sitemap.xml` returns 200.
+- Normal demo use issued no cross-origin requests. The implementation and live
+  hashes match for HTML, service worker, manifest, JS, and CSS.
+- HTTPS headers include CSP, frame denial, Permissions Policy, HSTS, strict
+  referrer policy, and `nosniff`. Hashed assets are immutable for one year;
+  `sw.js` is no-store; the manifest MIME type is correct.
+- Checkout returns 303 to `checkout.dodopayments.com`. A concurrent 121-request
+  invalid-license burst completed in 878 ms: 30×200 and 91×429; every 429 had
+  `Retry-After: 4`.
 
-```sh
-/opt/fleet/lib/deploy-static.sh health-visit-packet /work/repo/dist
-```
-
-Production URL: `https://health-visit-packet.sociobot.in`
-
-Live checks:
-
-- HTTPS 200; desktop and 390x844 render; 390 px document width; zero visible
-  undersized targets; zero dark-mode axe violations; zero console/page errors.
-- No normal-use cross-origin requests, trackers, remote fonts, or scripts.
-- Service worker controls the page; an offline reload retains a newly entered
-  observation and shows the offline status.
-- CSP, Permissions Policy, `X-Frame-Options: DENY`, HSTS, `nosniff`, and strict
-  referrer policy are present.
-- `manifest.webmanifest` is `application/manifest+json`; `sw.js` is no-store;
-  hashed JS/CSS are `max-age=31536000, immutable`.
-- Checkout responds HTTP 303 to a hosted
-  `checkout.dodopayments.com/session/...` URL.
-- Invalid license verification remains CORS-readable and no-store. The app
-  caches its verdict for 24 hours and never blocks the free first paint.
-
-Final artifact SHA-256 values:
+Artifact SHA-256 values:
 
 | Artifact | SHA-256 |
 | --- | --- |
-| `index.html` | `c82bf760d943d174d65d49381d2d30006d46b0cfa2d8e93fb904f117a8b4d3dc` |
-| `sw.js` | `d81be19c31be744b6385bc3b895f4eefbceb8020ab5304e840d3396e835ac049` |
-| `manifest.webmanifest` | `16c3e1f162edb78e437553be7a7d4fff58a2c7326486f03895850d26ade99365` |
-| `assets/index-Bz3ixYli.js` | `70a09f21227d2514aedf0fd1336e0d626306d08a125fa69e658f26defafe385e` |
-| `assets/index-Can7CmA2.css` | `3e0abe89040c35e1cb58c34985974847d366503c4c7cebcc402792e2622c6342` |
+| `index.html` | `72997757b8cc4d689d094a90234afed21ee67bb4b4c574f1b55bb7df525171d6` |
+| `sw.js` | `ded791330c360d0d3140406955630562b257a6ec9ddec0b16c764e87eaaa64f5` |
+| `manifest.webmanifest` | `dd26e0a64b4270eef8bcdc9a30be77e4125875d718a33ddf094091735751a1c5` |
+| `assets/index-Bo4QQzYB.js` | `be0e8730bad1b7af8cf3439f673da80014ff847926b91ada5dbd93c13409dfca` |
+| `assets/index-BynJlQnQ.css` | `105391bd1f1a5583afea219995b335d6d662a72ffd020beaab508330f9abafb3` |
 
-## Known gap and next owner
+The first deployment attempt stopped before upload because Azure treats
+`/demo` and `/demo/` as duplicate route declarations. Commit `72def07` removes
+the duplicate and adds a normalized-route regression. The next deployment
+completed successfully; production hashes match that candidate.
 
-`GET https://api.sociobot.in/api/v1/products/health-visit-packet/verify` returned
-121 HTTP 200 responses in 1.269 seconds on the final retest, with no 429 or
-`Retry-After`. This is the sole unresolved verifier finding. The Param Factory
-owner of `api.sociobot.in` must apply per-client throttling to the shared verify
-route, then rerun the exact burst. No static product code can enforce policy on
-direct requests to that external origin.
+## Known limits and next steps
 
-## Independent verification 2 — PASS
-
-Verifier work order `health-visit-packet-verify-2` independently tested
-candidate `80835d083a34486bff2240296c229bef4a02b2f1` from a clean checkout on
-2026-08-28 UTC and verified the matching production URL
-`https://health-visit-packet.sociobot.in`.
-
-The result is **PASS**. Run the same local gates with:
-
-```sh
-npm ci
-npm run lint
-npm test
-npm run build
-```
-
-Fresh results: install had 0 vulnerabilities; lint passed; Vitest passed 2/2;
-Playwright passed 16/16; typecheck passed as part of build; and `dist/` was
-produced. Production hashes for HTML, worker, manifest, JS, CSS, illustration,
-and both icons matched the freshly built artifact exactly. The live PWA,
-offline reload with retained IndexedDB data, service-worker update regression,
-desktop and 390 px layout, keyboard/focus flow, reduced motion, light/dark axe,
-encrypted export/restore coverage, headers/caching, privacy behavior, and paid
-checkout were all confirmed. Live Lighthouse scored 93 performance, 100
-accessibility, 100 best practices, and 100 SEO (FCP 0.8 s, LCP 1.0 s, CLS 0,
-83 KiB transfer).
-
-This verification also supersedes the prior external rate-limit gap. A new
-121-request verification burst completed in 958 ms with 30 HTTP 200 and 91
-HTTP 429 responses; every rate-limited response contained `Retry-After: 4`.
-Observed threshold: 30 accepted requests in the burst window. No defects were
-found. Detailed reproducible evidence is in `.factory/verification-2.md`.
-
-## Strict review 1 — FAIL
-
-Review work order `health-visit-packet-review-1` tested production again on
-2026-09-05 UTC. The reviewed implementation remains
-`80835d083a34486bff2240296c229bef4a02b2f1`; documentation HEAD before this
-review was `e4799807c21a22e2999c05b674f4ab7b7f07f126`. Live HTML, worker,
-manifest, JS, and CSS hashes matched the implementation candidate.
-
-The strict result is **FAIL: 6 findings and 18 untested public claims**. No
-product code was changed. The blocking gaps are:
-
-- No one-click sample demo or isolated demo namespace. `/demo` is the normal
-  empty app, writes to `health-visit-packet`, exposes those entries on `/`, and
-  has no sample label, reset, or start-real actions. `.factory/demo.md` is
-  absent.
-- No `.factory/claims.json` and no `@claim:*` tests. Eighteen public claims were
-  inventoried as untested under the claims contract.
-- At 390 px with text resized to 200%, the document expands to 526 px while
-  horizontal overflow is clipped.
-- The first screen does not name patients, explain the primary action's result,
-  or present three short privacy/offline/price facts. `.factory/copy-audit.md`
-  is absent.
-- Required site structure is incomplete: no designed 404, sitemap, canonical,
-  social metadata/image, Apple touch declaration, Demo title/link, shared legal
-  shell, footer attribution/version, or three-step How it works section.
-- README says all state is in IndexedDB although license state uses
-  localStorage.
-
-Core product behavior and all earlier repair findings continue to pass. A fresh
-`npm ci`, lint, 18 tests, typecheck, and build passed. Live normal/boundary/error
-and recovery paths passed; root-route offline reload retained data; Undo passed
-for every entry kind; keyboard, reduced motion, normal-size mobile targets, and
-light/dark axe passed. Checkout returned 303. Rate limiting returned 30×200 and
-91×429, with `Retry-After: 4` on every 429. Fresh Lighthouse scores were
-100/100/100/100 with 1.0 s LCP, 20 ms TBT, CLS 0, and 83 KiB transfer.
-
-See `.factory/review-1.md` for the complete evidence, claim inventory, exact
-prior-finding dispositions, and required remediation. Evidence screenshots and
-the Lighthouse JSON are under `/work/.evidence/`.
+- No real payment was completed during repair. The live checkout redirect and
+  local entitlement behavior passed, but a redirect alone does not prove a
+  paid token was issued. The separate billing operator owns an end-to-end paid
+  purchase check.
+- The product intentionally does not retrieve portals, interpret results, give
+  medical advice, sync data, or provide emergency guidance.
+- There is no product backend, account, tenant, or server-side packet store, so
+  tenant-isolation and backend-restart checks do not apply.
