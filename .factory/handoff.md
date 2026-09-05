@@ -185,3 +185,22 @@ completed successfully; production hashes match that candidate.
   medical advice, sync data, or provide emergency guidance.
 - There is no product backend, account, tenant, or server-side packet store, so
   tenant-isolation and backend-restart checks do not apply.
+
+## Independent verification 3
+
+Verification work order `health-visit-packet-verify-3` reviewed implementation
+`72def0701846a146d722ecb0e7f3d948ca5b4bb6` against documentation baseline
+`8e920cb717e4f001db6c6938693a388037d971d0` on 2026-09-05 UTC. It made no
+product-code changes.
+
+**PASS — zero findings and zero untested claims.** A detached clean checkout
+passed `npm ci`, lint, 2/2 unit tests, 39/39 browser tests, build, and all 19
+individually declared claim commands. Live production exactly matched the
+candidate hash set. Fresh desktop/phone, sample isolation/reset/exit, offline
+demo reload, keyboard/focus, 200% text resize, live axe light/dark, legal and
+404 routes, link crawl, checkout redirect, headers, and rate limiting all
+passed. Lighthouse scored 100/100/100/100.
+
+See `.factory/verification-3.md` and `/work/.evidence/qa-report.md` for the
+full evidence. The only boundary remains that no real payment transaction was
+completed; checkout redirect and entitlement behavior were verified.
