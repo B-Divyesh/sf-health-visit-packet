@@ -252,6 +252,8 @@ test('release configuration hardens responses, MIME, and immutable assets', asyn
   expect(config.routes.find((route: { route: string }) => route.route === '/assets/*').headers['Cache-Control']).toContain('immutable');
   expect(config.routes.find((route: { route: string }) => route.route === '/sw.js').headers['Cache-Control']).toContain('no-store');
   expect(config.routes.find((route: { route: string }) => route.route === '/demo').rewrite).toBe('/index.html');
+  const normalizedRoutes = config.routes.map((route: { route: string }) => route.route.replace(/\/$/, ''));
+  expect(new Set(normalizedRoutes).size).toBe(normalizedRoutes.length);
   expect(config.responseOverrides['404'].rewrite).toBe('/404.html');
 });
 
