@@ -204,3 +204,22 @@ passed. Lighthouse scored 100/100/100/100.
 See `.factory/verification-3.md` and `/work/.evidence/qa-report.md` for the
 full evidence. The only boundary remains that no real payment transaction was
 completed; checkout redirect and entitlement behavior were verified.
+
+## Strict review 2
+
+Review work order `health-visit-packet-review-2` made no product-code changes.
+It reviewed implementation `72def0701846a146d722ecb0e7f3d948ca5b4bb6` against
+documentation baseline `edb36f1c8cc5bc8f06b830fc3ab85bcab0fce447`.
+
+**PASS — zero findings and zero untested public claims.** A detached clean
+checkout passed `npm ci`, lint, 2/2 unit tests, 39/39 browser tests, build, and
+each of the 19 declared claim commands separately. Fresh production desktop and
+phone contexts showed the job, audience, and sample action before scroll.
+Demo/reset/exit isolation, offline reload, keyboard focus, accessibility,
+routes/legal/404, headers, internal links, checkout redirect, candidate hashes,
+and Lighthouse 100/100/100/100 passed. The refreshed report is
+`.factory/review-2.md`; evidence is under `/work/.evidence/review-2-*`.
+
+No real payment transaction was completed. That billing-operation boundary is
+not a product finding; checkout redirect and local entitlement behavior were
+verified.
